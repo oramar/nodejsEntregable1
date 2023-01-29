@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+
+  motocicleta:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: container_motocicleta    
+    ports:
+      - "6000:6000"    
+    depends_on:
+      - dbpostgres
+    links:
+      - dbpostgres
+    volumes:
+      - .:/home/app
+    networks:
+      app_network_motor:
+        aliases:
+          - app_host_motor
+
+  dbpostgres:    
+    container_name: container_dbpostgres
+    image: postgres:15.1-alpine   
+    restart: always
+    environment:     
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+   
+    ports: 
+      - "5433:5432"    
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      app_network_motor:
+        aliases:
+          - data_host_motor
+volumes:
+
+  pgdata:
+networks:
+  app_network_motor:
+    name: motorsDb
+    driver: bridge
+    ipam:
+      driver: default
+
+
+
+
+  
+    
