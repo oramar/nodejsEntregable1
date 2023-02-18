@@ -1,7 +1,8 @@
+const catchAsync = require('../../utils/catchAsync');
 const User = require('../models/user.models');
 
-exports.validIfExistUser = async (req, res, next) => {
-  try {
+exports.validIfExistUser = catchAsync( async (req, res, next) => {
+ 
     // 1. Obtenemos el id de los parametros
     const { id } = req.params;
     // 2. Obtenemso el usuario por su id y que sea de estatus available
@@ -21,17 +22,11 @@ exports.validIfExistUser = async (req, res, next) => {
 
     req.user = user;
     next();
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+ 
+});
 
-exports.validIfExistUserEmail = async (req, res, next) => {
-  try {
+exports.validIfExistUserEmail =catchAsync( async (req, res, next) => {
+ 
     const { email } = req.body;
 
     const user = await User.findOne({
@@ -57,14 +52,8 @@ exports.validIfExistUserEmail = async (req, res, next) => {
     }
 
     next();
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+ 
+});
 
 //_________________________________
 

@@ -1,7 +1,7 @@
 const express = require('express'); //para utilizar express
 const cors = require('cors'); //utilizamos cors
 const morgan = require('morgan'); //utilizamos morgan
-const { transferRouter } = require('../routes/transfer.routes');
+const { repairRouter } = require('../routes/repair.routes');
 const { db } = require('../database/db');
 const { userRouter } = require('../routes/user.routes');
 
@@ -14,7 +14,7 @@ class Server {
     this.paths = {
       //definimos los paths general de nuestra aplicacion
       user: '/api/v1/user',
-      transfer: '/api/v1/transfer',
+      repair: '/api/v1/repair',
     };
 
     //ejecutamos los metodos creados abajo en el siguiente orden
@@ -36,7 +36,7 @@ class Server {
 
   //Creamos el metodo de rutas
   routes() {
-    this.app.use(this.paths.transfer, transferRouter); //Utilizamos la rutas de transfer
+    this.app.use(this.paths.repair, repairRouter); //Utilizamos la rutas de transfer
     this.app.use(this.paths.user, userRouter);
   }
 

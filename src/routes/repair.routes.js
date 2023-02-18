@@ -5,18 +5,18 @@ const {
   updateTransfer,
   findById,
   deleteTransfer,
-} = require('../controllers/transfer.controller');
+} = require('../controllers/repair.controller');
 const {
-  valideTransferById,
-  valideTransferByIdStatus,
-} = require('../middlewares/transfer.middlewares');
+  valideRepairById,
+  valideRepairByIdStatus,
+} = require('../middlewares/repair.middlewares');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validateField.middleware');
 const router = Router();
 
 //Definimos los endpoints que utilizaremos en estas rutas
 router.get('/', findTransfers);
-router.get('/:id', valideTransferById, findById);
+router.get('/:id', valideRepairById, findById);
 router.post(
   '/',
   [
@@ -33,10 +33,12 @@ router.patch(
     check('sttus', 'The status must be mandatory').not().isEmpty(),
     validateFields,
   ],
-  valideTransferById,
+  valideRepairById,
   updateTransfer
 );
-router.delete('/:id', valideTransferByIdStatus, deleteTransfer);
-module.exports = {
-  transferRouter: router,
-};
+router.delete('/:id', valideRepairByIdStatus, deleteTransfer);
+
+module.exports =  {
+  repairRouter: router
+} 
+

@@ -1,4 +1,4 @@
-const Transfer = require('../models/transfer.models');
+const Transfer = require('../models/repair.models');
 exports.findTransfers = async (req, res) => {
   try {
     const transfers = await Transfer.findAll({

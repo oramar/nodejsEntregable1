@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { db } = require('../database/db');
 
-const Transfer = db.define('transfer', {
+const Repair = db.define('repair', {
   id: {
     primaryKey: true,
     autoIncrement: true,
@@ -12,7 +12,14 @@ const Transfer = db.define('transfer', {
     type: DataTypes.DATEONLY,
     allowNull: false,
   },
-  
+  motorsNumbers: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   status: {
     type: DataTypes.ENUM(['pending', 'completed','cancelled']),
     allowNull: false,
@@ -24,4 +31,4 @@ const Transfer = db.define('transfer', {
   },
 });
 
-module.exports = Transfer;
+module.exports = Repair;
