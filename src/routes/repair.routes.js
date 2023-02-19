@@ -23,6 +23,8 @@ router.post(
     check('date', 'The date must be mandatory').not().isEmpty(),
     check('date', 'The email must be a correct format').isDate(),
     check('userId', 'The UserId must be mandatory').not().isEmpty(),
+    check('motorsNumbers', 'The UserId must be mandatory').not().isEmpty(),
+    check('description', 'The UserId must be mandatory').not().isEmpty(),
     validateFields,
   ],
   createTransfer
@@ -30,7 +32,7 @@ router.post(
 router.patch(
   '/:id',
   [
-    check('sttus', 'The status must be mandatory').not().isEmpty(),
+    check('status', 'The status must be mandatory').not().isEmpty(),
     validateFields,
   ],
   valideRepairById,

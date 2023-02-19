@@ -7,7 +7,9 @@ const {
   updateUserById,
   findUserById,
   deleteUser,
+  updatePassword,
 } = require('../controllers/user.controller');
+const { protect, protectAccountOwner } = require('../middlewares/auth.middleware');
 const {
   validIfExistUser,
   validIfExistUserEmail,
@@ -19,18 +21,9 @@ const router = Router();
 //Definimos los endpoints que utilizaremos en estas rutas
 router.get('/', findUsers);
 router.get('/:id', validIfExistUser, findUserById);
-router.post(
-  '/',
-  [
-    check('name', 'The name must be mandatory').not().isEmpty(),
-    check('email', 'The email must be mandatory').not().isEmpty(),
-    check('email', 'The email must be a correct format').isEmail(),
-    check('password', 'The password must be mandatory').not().isEmpty(),
-    validateFields,
-    validIfExistUserEmail,
-  ],
-  createUser
-);
+
+router.use(protect);
+
 router.patch(
   '/:id',
   [
@@ -39,10 +32,24 @@ router.patch(
     check('email', 'The email must be a correct format').isEmail(),
     validateFields,
     validIfExistUser,
+    protectAccountOwner,
   ],
   updateUserById
 );
-router.delete('/:id', validIfExistUser, deleteUser);
+router.patch(
+  '/password/:id',
+  [
+    check('currentPassword', 'The current password must be mandatory')
+      .not()
+      .isEmpty(),
+    check('newPassword', 'The new password must be mandatory').not().isEmpty(),
+    validateFields,
+    validIfExistUser,
+    protectAccountOwner,
+  ],
+  updatePassword
+);
+router.delete('/:id', validIfExistUser,protectAccountOwner, deleteUser);
 module.exports = {
   userRouter: router,
 };

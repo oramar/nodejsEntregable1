@@ -1,7 +1,7 @@
 const catchAsync = require('../../utils/catchAsync');
-const User = require('../models/user.models');
+const User = require('../models/user.models')
 
-const findUsers = catchAsync(async (req, res, next) => {
+exports.findUsers = catchAsync(async (req, res, next) => {
   // 1. Obtener la lista de los usuarios en la base de datos
   const users = await User.findAll({});
 
@@ -14,7 +14,7 @@ const findUsers = catchAsync(async (req, res, next) => {
 });
 
 //Buscamos un usuario por id y que no este disabled
-const findUserById = catchAsync(async (req, res, next) => {
+exports.findUserById = catchAsync(async (req, res, next) => {
   const { user } = req;
   // 4. Enviamos respuesta affirmativa
   res.status(200).json({
@@ -24,25 +24,7 @@ const findUserById = catchAsync(async (req, res, next) => {
   });
 });
 
-const createUser = catchAsync(async (req, res, next) => {
-  //1. OBTENER LA INFORMACION DE LA REQ.BODY
-  const { name, email, password, role } = req.body;
-  //2. CREAR EL USUARIO CON LA INFORMACION DE LA REQ.BODY
-  const user = await User.create({
-    name: name.toLowerCase(),
-    email: email.toLowerCase(),
-    password,
-    role,
-  });
-  //3. ENVIAR UNA RESPUESTA AL USUARIO
-  res.status(201).json({
-    status: 'success',
-    message: 'User created successfully',
-    user,
-  });
-});
-
-const updateUserById = catchAsync(async (req, res, next) => {
+exports.updateUserById = catchAsync(async (req, res, next) => {
   // 2. OBTENER LA INFORMACION A ACTUALIZAR DE LA REQ.BODY
   const { name, email } = req.body;
   const { user } = req;
@@ -57,7 +39,7 @@ const updateUserById = catchAsync(async (req, res, next) => {
   });
 });
 
-const deleteUser = catchAsync(async (req, res, next) => {
+exports.deleteUser = catchAsync(async (req, res, next) => {
   const { user } = req;
   // 4. REALIZAR LA ACTUALIZACIÓN DEL STATUS DEL USUARIO ENCONTRADO ANTERIORMENTE
   await user.update({ status: 'disabled' });
@@ -68,10 +50,26 @@ const deleteUser = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = {
-  findUsers,
-  findUserById,
-  createUser,
-  updateUserById,
-  deleteUser,
-};
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  const { user } = req;
+  const { currentPassword, newPassword } = req.body;
+
+  if (!(await bcrypt.compare(currentPassword, user.password))) {
+    return next(new AppError('Incorrect password', 401));
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const encriptedPassword = await bcrypt.hash(newPassword, salt);
+
+  await user.update({
+    password: encriptedPassword,
+    passwordChangedAt: new Date(),
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'The user password was updated successfully',
+  });
+});
+
+

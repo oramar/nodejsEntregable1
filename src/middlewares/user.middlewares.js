@@ -14,10 +14,10 @@ exports.validIfExistUser = catchAsync( async (req, res, next) => {
     });
     //3. Enviamos un error si no existe un usuario
     if (!user) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'User not found',
-      });
+      return next(
+        new AppError('User not found', 404)
+      );
+   
     }
 
     req.user = user;
@@ -37,18 +37,17 @@ exports.validIfExistUserEmail =catchAsync( async (req, res, next) => {
 
     if (user && user.status !== 'available') {
       //Si existe el usuario pero el estatus es available entonces arrojamos un erro 400
-      return res.status(400).json({
-        status: 'error',
-        message:
-          'El usuario tiene una cuenta, pero esta desactivida por favor hable con el administrador para activarla',
-      });
+      return next(
+        new AppError('The user has an account, but it is deactivated please talk to the administrator to activate it', 400)
+      );
+     
     }
 
     if (user) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'The email user already exists',
-      });
+      return next(
+        new AppError('The email user already exists', 400)
+      );
+     
     }
 
     next();
