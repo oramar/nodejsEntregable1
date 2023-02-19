@@ -1,7 +1,7 @@
+const catchAsync = require('../../utils/catchAsync');
 const Transfer = require('../models/repair.models');
-exports.findTransfers = async (req, res) => {
-  try {
-    const transfers = await Transfer.findAll({
+exports.findTransfers = catchAsync( async (req, res,next) => {
+  const transfers = await Transfer.findAll({
       where: {
         status: 'pending',
       },
@@ -11,33 +11,21 @@ exports.findTransfers = async (req, res) => {
       message: 'The transfers found were successfull',
       transfers,
     });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+ 
+});
 
-exports.findById = async (req, res) => {
-  try {
+exports.findById = catchAsync( async (req, res, next) => {  
     const { transfer } = req;
     return res.status(200).json({
       status: 'succes',
       message: 'The transfers found were successfull',
       transfer,
     });
-  } catch (error) {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+ 
+});
 
-exports.createTransfer = async (req, res) => {
-  try {
+exports.createTransfer =catchAsync( async (req, res,next) => {
+ 
     //obtenemos la informacion a guardar de la req.body
     const { date, userId } = req.body;
     const newTransfer = await Transfer.create({
@@ -49,17 +37,11 @@ exports.createTransfer = async (req, res) => {
       message: 'The transfer was created successfully',
       newTransfer,
     });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
 
-exports.updateTransfer = async (req, res) => {
-  try {
+});
+
+exports.updateTransfer = catchAsync( async (req, res,next) => {
+
     //1. Obtendo todos los item de transfer
     const { transfer } = req;
     //2. obtengo la informacion a actualizar del req.body
@@ -75,16 +57,10 @@ exports.updateTransfer = async (req, res) => {
       message: 'Then transfer has been updated successfully',
       updateTransfer,
     });
-  } catch (error) {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+ 
+});
 
-exports.deleteTransfer = async (req, res) => {
-  try {
+exports.deleteTransfer = catchAsync( async (req, res,next) => { 
     const { transfer } = req;
     res.transfer
     await transfer.update({ status: 'cancelled' ,});
@@ -92,11 +68,5 @@ exports.deleteTransfer = async (req, res) => {
       status: 'success',
       message: 'The Transfer has been deleted successfully',
     });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+
+});

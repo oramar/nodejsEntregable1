@@ -4,7 +4,7 @@ const morgan = require('morgan'); //utilizamos morgan
 const { repairRouter } = require('../routes/repair.routes');
 const { db } = require('../database/db');
 const { userRouter } = require('../routes/user.routes');
-
+const {initModel} = require('../models/initModels');
 //1. Creamos la clase server
 class Server {
   constructor() {
@@ -44,7 +44,8 @@ class Server {
     db.authenticate()
       .then(() => console.log('Database authenticated'))
       .catch(error => console.log(error));
-
+    // relations
+    initModel();
     db.sync()
       .then(() => console.log('Database synced'))
       .catch(error => console.log(error));
