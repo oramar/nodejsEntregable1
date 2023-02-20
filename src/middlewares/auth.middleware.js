@@ -1,7 +1,7 @@
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
-const AppError = require('../../utils/appError');
-const catchAsync = require('../../utils/catchAsync');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user.models');
 
 /* A middleware function that is used to protect routes. */

@@ -1,4 +1,4 @@
-const catchAsync = require('../../utils/catchAsync');
+const catchAsync = require('../utils/catchAsync');
 const Repair = require('../models/repair.models');
 exports.valideRepairById = catchAsync(async (req, res, next) => {
   //id del Repair que se va verificar si existe

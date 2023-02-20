@@ -11,7 +11,8 @@ const { db } = require('../database/db');
 const { userRouter } = require('../routes/user.routes');
 const { initModel } = require('../models/initModels');
 const globalErrorHandler = require('../controllers/error.controller');
-const AppError = require('../../utils/appError');
+const AppError = require('../utils/appError');
+const { authRouter } = require('../routes/auth.routes');
 //1. Creamos la clase server
 class Server {
   constructor() {
@@ -20,11 +21,12 @@ class Server {
     this.port = process.env.PORT || 6000;
     this.limiter = rateLimit({
       windowMs: 60 * 60 * 1000,
-      max: 3,
+      max: 100,
       message: 'Too many request from this IP, please try again in an hour!',
     });
     this.paths = {
       //definimos los paths general de nuestra aplicacion
+      auth: '/api/v1/auth',
       user: '/api/v1/user',
       repair: '/api/v1/repair',
     };
@@ -52,8 +54,11 @@ class Server {
 
   //Creamos el metodo de rutas
   routes() {
+      //utilizar las rutas de autenticacion
+      this.app.use(this.paths.auth, authRouter);
     this.app.use(this.paths.repair, repairRouter); //Utilizamos la rutas de transfer
     this.app.use(this.paths.user, userRouter);
+
     this.app.all('*', (req, res, next) => {
       return next(
         new AppError(`Can't find ${req.originalUrl} on this server!`, 404)
@@ -69,7 +74,7 @@ class Server {
       .catch(error => console.log(error));
     // relations
     initModel();
-    db.sync()
+    db.sync()//{force:true}
       .then(() => console.log('Database synced'))
       .catch(error => console.log(error));
   }

@@ -1,10 +1,10 @@
 const { Router } = require('express'); //Importamos routes para trabajar con rutas
 const {
-  findTransfers,
-  createTransfer,
-  updateTransfer,
+  findAllRepair,
+  createRepair,
+  updateRepair,
   findById,
-  deleteTransfer,
+  deleteRepair
 } = require('../controllers/repair.controller');
 const {
   valideRepairById,
@@ -15,7 +15,7 @@ const { validateFields } = require('../middlewares/validateField.middleware');
 const router = Router();
 
 //Definimos los endpoints que utilizaremos en estas rutas
-router.get('/', findTransfers);
+router.get('/', findAllRepair);
 router.get('/:id', valideRepairById, findById);
 router.post(
   '/',
@@ -27,7 +27,7 @@ router.post(
     check('description', 'The UserId must be mandatory').not().isEmpty(),
     validateFields,
   ],
-  createTransfer
+  createRepair
 );
 router.patch(
   '/:id',
@@ -36,9 +36,9 @@ router.patch(
     validateFields,
   ],
   valideRepairById,
-  updateTransfer
+  updateRepair
 );
-router.delete('/:id', valideRepairByIdStatus, deleteTransfer);
+router.delete('/:id', valideRepairByIdStatus, deleteRepair);
 
 module.exports =  {
   repairRouter: router

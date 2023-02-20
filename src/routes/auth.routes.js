@@ -6,7 +6,7 @@ const {
   renewToken,
 } = require('../controllers/auth.controller');
 const { protect } = require('../middlewares/auth.middleware');
-const { validIfExistUserEmail } = require('../middlewares/user.middleware');
+const { validIfExistUserEmail } = require('../middlewares/user.middlewares');
 const { validateFields } = require('../middlewares/validateField.middleware');
 const { upload } = require('../utils/multer');
 
@@ -16,7 +16,7 @@ router.post(
   '/signup',
   [
     upload.single('profileImageUrl'),
-    check('username', 'The username must be mandatory').not().isEmpty(),
+    check('name', 'The username must be mandatory').not().isEmpty(),
     check('email', 'The email must be mandatory').not().isEmpty(),
     check('email', 'The email must be a correct format').isEmail(),
     check('password', 'The password must be mandatory').not().isEmpty(),

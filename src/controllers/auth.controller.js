@@ -1,20 +1,14 @@
-const User = require('../models/user.model');
-const catchAsync = require('../utils/catchAsync');
 const bcrypt = require('bcryptjs');
 const generateJWT = require('../utils/jwt');
 const AppError = require('../utils/appError');
+const User = require('../models/user.models');
+const catchAsync = require('../utils/catchAsync');
 
 /* A function that creates a user. */
 exports.createUser = catchAsync(async (req, res, next) => {
-  console.table(req.body);
-  console.log(req.file);
 
-  res.json({
-    status: 'sucess',
-  });
-
-  const { username, email, password, role = 'user' } = req.body;
-  const user = new User({ username, email, password, role });
+  const { name, email, password, role = 'client' } = req.body;
+  const user = new User({ name, email:email.toLowerCase(), password, role });
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(password, salt);
   await user.save();
@@ -25,7 +19,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
     token,
     user: {
       id: user.id,
-      username: user.username,
+      name: user.name,
       email: user.email,
       role: user.role,
     },
@@ -39,7 +33,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({
     where: {
       email: email.toLowerCase(),
-      status: true,
+      status: 'available',
     },
   });
 

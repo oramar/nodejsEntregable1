@@ -1,4 +1,4 @@
-const catchAsync = require('../../utils/catchAsync');
+const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user.models');
 
 exports.validIfExistUser = catchAsync( async (req, res, next) => {
