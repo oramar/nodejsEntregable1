@@ -6,7 +6,7 @@ exports.findAllRepair = catchAsync( async (req, res,next) => {
   const repairs = await Repair.findAll({
     attributes: ['id', 'date','description','status'],
       where: {
-        status: ['pending','completed'],
+        status: ['pending'],
       },
      
       include:[
@@ -61,12 +61,11 @@ exports.updateRepair = catchAsync( async (req, res,next) => {
 
     //1. Obtendo todos los item de transfer
     const { repair } = req;
-    //2. obtengo la informacion a actualizar del req.body
-    const { status } = req.body;
+  
 
     //5. actualizamos el transfer si todo sale bien
     const updateRepair = await repair.update({
-      status: status.toLowerCase(),
+      status: "completed",
     });
     //6. ENVIO LA RESPUESTA AL CLIENTE
     res.status(200).json({

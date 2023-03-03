@@ -8,6 +8,7 @@ const {
 const { protect } = require('../middlewares/auth.middleware');
 const { validIfExistUserEmail } = require('../middlewares/user.middlewares');
 const { validateFields } = require('../middlewares/validateField.middleware');
+const { registerUserValidation, loginUserValidation } = require('../middlewares/validations.middlewares');
 const { upload } = require('../utils/multer');
 
 const router = Router();
@@ -16,10 +17,7 @@ router.post(
   '/signup',
   [
     upload.single('profileImageUrl'),
-    check('name', 'The username must be mandatory').not().isEmpty(),
-    check('email', 'The email must be mandatory').not().isEmpty(),
-    check('email', 'The email must be a correct format').isEmail(),
-    check('password', 'The password must be mandatory').not().isEmpty(),
+    registerUserValidation,
     validateFields,
     validIfExistUserEmail,
   ],
@@ -29,9 +27,7 @@ router.post(
 router.post(
   '/login',
   [
-    check('email', 'The email must be mandatory').not().isEmpty(),
-    check('email', 'The email must be a correct format').isEmail(),
-    check('password', 'The password must be mandatory').not().isEmpty(),
+    loginUserValidation,
     validateFields,
   ],
   login

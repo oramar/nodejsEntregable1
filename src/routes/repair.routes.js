@@ -12,11 +12,13 @@ const {
 } = require('../middlewares/repair.middlewares');
 const { check } = require('express-validator');
 const { validateFields } = require('../middlewares/validateField.middleware');
+const { restrictTo } = require('../middlewares/auth.middleware');
 const router = Router();
 
 //Definimos los endpoints que utilizaremos en estas rutas
-router.get('/', findAllRepair);
-router.get('/:id', valideRepairById, findById);
+
+router.get('/', restrictTo('employee'),findAllRepair);
+router.get('/:id', restrictTo('employee'),valideRepairById, findById);
 router.post(
   '/',
   [
@@ -33,12 +35,13 @@ router.patch(
   '/:id',
   [
     check('status', 'The status must be mandatory').not().isEmpty(),
+    restrictTo('employee'),
     validateFields,
   ],
   valideRepairById,
   updateRepair
 );
-router.delete('/:id', valideRepairByIdStatus, deleteRepair);
+router.delete('/:id', restrictTo('employee'),valideRepairByIdStatus, deleteRepair);
 
 module.exports =  {
   repairRouter: router
